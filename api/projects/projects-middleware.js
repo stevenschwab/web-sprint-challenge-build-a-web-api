@@ -1,3 +1,13 @@
+function logger(req, res, next) {
+    const date = new Date();
+    console.log(`
+        REQUEST METHOD: ${req.method}
+        REQUEST URL: ${req.originalUrl}
+        TIMESTAMP; ${date.toLocaleString()}
+    `);
+    next();
+}
+
 function validateProject(req, res, next) {
     const { name, description, completed } = req.body;
     if (
@@ -13,13 +23,27 @@ function validateProject(req, res, next) {
     ) {
         return res.status(400).json({ message: "Description field missing" })
     } else if (completed !== undefined && typeof completed !== 'boolean') {
-        return res.status(400).json({ message: "Complete field must be a boolean" })
+        return res.status(400).json({ message: "Completed field must be a boolean" })
     }
     req.name = name.trim()
     req.description = description.trim()
     next();
 }
 
+function validateCompletedField(req, res, next) {
+    const { completed } = req.body;
+    if (
+        (req.method === 'PUT' && 
+        completed === undefined) || 
+        typeof completed !== 'boolean'
+    ) {
+        return res.status(400).json({ message: "Completed field is required" })
+    }
+    next();
+}
+
 module.exports = {
-    validateProject
+    validateProject,
+    validateCompletedField,
+    logger,
 }
