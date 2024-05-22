@@ -1,6 +1,6 @@
 const express = require('express');
 const Projects = require('./projects-model');
-const { validateProject, validateCompletedField } = require('./projects-middleware');
+const { validateProject, validateCompletedField, validateProjectId } = require('./projects-middleware');
 
 const router = express.Router()
 
@@ -54,6 +54,14 @@ router.delete('/:id', (req, res, next) => {
             } else {
                 res.status(404).json({ message: "No project with the given id" })
             }
+        })
+        .catch(next)
+})
+
+router.get('/:id/actions', validateProjectId, (req, res, next) => {
+    Projects.getProjectActions(req.params.id)
+        .then(actions => {
+            res.json(actions)
         })
         .catch(next)
 })

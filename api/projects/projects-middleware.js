@@ -1,3 +1,5 @@
+const Projects = require('./projects-model')
+
 function logger(req, res, next) {
     const date = new Date();
     console.log(`
@@ -42,8 +44,20 @@ function validateCompletedField(req, res, next) {
     next();
 }
 
+function validateProjectId(req, res, next) {
+    Projects.get(req.params.id)
+        .then(project => {
+            if (!project) {
+                res.status(404).json({ message: "Project ID not found" })
+            }
+            next();
+        })
+        .catch(next)
+}
+
 module.exports = {
     validateProject,
     validateCompletedField,
     logger,
+    validateProjectId,
 }
