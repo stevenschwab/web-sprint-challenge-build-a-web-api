@@ -33,6 +33,18 @@ router.post('/', validateAction, validateProjectId('body'), (req, res, next) => 
         .catch(next)
 })
 
+router.put('/:id', validateAction, (req, res, next) => {
+    Actions.update(req.params.id, req.body)
+        .then(action => {
+            if (action) {
+                res.json(action)
+            } else {
+                res.status(404).json({ message: "No action with the given id" })
+            }
+        })
+        .catch(next)
+})
+
 router.use((error, req, res, next) => { // eslint-disable-line
     res.status(error.status || 500).json({
         message: error.message,
