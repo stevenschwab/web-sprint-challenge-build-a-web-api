@@ -45,6 +45,18 @@ router.put('/:id', validateAction, (req, res, next) => {
         .catch(next)
 })
 
+router.delete('/:id', (req, res, next) => {
+    Actions.remove(req.params.id)
+        .then(count => {
+            if (count > 0) {
+                res.status(204).json()
+            } else {
+                res.status(404).json({ message: "No action with the given id" })
+            }
+        })
+        .catch(next)
+})
+
 router.use((error, req, res, next) => { // eslint-disable-line
     res.status(error.status || 500).json({
         message: error.message,
