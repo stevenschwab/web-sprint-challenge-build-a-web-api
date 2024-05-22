@@ -1,1 +1,7 @@
-// add middlewares here related to actions
+// function validatesAction(req, res, next) {
+
+// }
+
+// module.exports = {
+//     validatesAction,
+// }
