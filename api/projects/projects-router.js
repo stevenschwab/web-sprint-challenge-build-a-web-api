@@ -13,8 +13,7 @@ router.get('/', (req, res, next) => {
 })
 
 router.get('/:id', (req, res, next) => {
-    const { id } = req.params;
-    Projects.get(id)
+    Projects.get(req.params.id)
         .then(project => {
             if (project) {
                 res.json(project)
@@ -58,7 +57,7 @@ router.delete('/:id', (req, res, next) => {
         .catch(next)
 })
 
-router.get('/:id/actions', validateProjectId, (req, res, next) => {
+router.get('/:id/actions', validateProjectId('params'), (req, res, next) => {
     Projects.getProjectActions(req.params.id)
         .then(actions => {
             res.json(actions)

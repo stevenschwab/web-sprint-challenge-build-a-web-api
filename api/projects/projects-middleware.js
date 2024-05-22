@@ -44,15 +44,18 @@ function validateCompletedField(req, res, next) {
     next();
 }
 
-function validateProjectId(req, res, next) {
-    Projects.get(req.params.id)
-        .then(project => {
-            if (!project) {
-                res.status(404).json({ message: "Project ID not found" })
-            }
-            next();
-        })
-        .catch(next)
+function validateProjectId(key) {
+    return function(req, res, next) {
+        const projectId = req[key].project_id || req[key].id;
+        Projects.get(projectId)
+            .then(project => {
+                if (!project) {
+                    return res.status(404).json({ message: "Project ID not found" })
+                }
+                next();
+            })
+            .catch(next)
+    }
 }
 
 module.exports = {
