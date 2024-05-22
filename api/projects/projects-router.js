@@ -46,6 +46,18 @@ router.put('/:id', validateProject, validateCompletedField, (req, res, next) => 
         .catch(next)
 })
 
+router.delete('/:id', (req, res, next) => {
+    Projects.remove(req.params.id)
+        .then(count => {
+            if (count > 0) {
+                res.status(204).json()
+            } else {
+                res.status(404).json({ message: "No project with the given id" })
+            }
+        })
+        .catch(next)
+})
+
 router.use((error, req, res, next) => {
     res.status(error.status || 500).json({
         message: error.message,
